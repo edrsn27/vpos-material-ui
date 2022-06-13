@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { useAuth } from "../../context/AuthProvider";
 import Alert from "@mui/material/Alert";
+import { useRouter } from "next/router";
 function Copyright(props) {
   return (
     <Typography
@@ -42,6 +43,7 @@ export default function SignInSide() {
   const [loading, setLoading] = useState(false);
 
   const { signin } = useAuth();
+  const { push } = useRouter();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -140,7 +142,11 @@ export default function SignInSide() {
               </Button>
               <Grid container>
                 <Grid item xs>
-                  <Link href="#" variant="body2">
+                  <Link
+                    href="#"
+                    variant="body2"
+                    onClick={() => push("/auth/forgot-password")}
+                  >
                     Forgot password?
                   </Link>
                 </Grid>
