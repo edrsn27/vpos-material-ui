@@ -56,7 +56,6 @@ export default function AuthProvider({ children }) {
     signin,
     signout,
     forgotpassword,
-    writeUserData,
   };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
