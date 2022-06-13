@@ -1,4 +1,4 @@
-import * as React from "react";
+import { useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -13,6 +13,8 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { useAuth } from "../../context/AuthProvider";
+import Alert from "@mui/material/Alert";
 function Copyright(props) {
   return (
     <Typography
@@ -34,13 +36,24 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignInSide() {
-  const handleSubmit = (event) => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { signin } = useAuth();
+
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    setLoading(true);
+    setError("");
+    try {
+      setLoading(true);
+      await signin(email, password);
+    } catch (error) {
+      setError(error);
+    }
+    setLoading(false);
   };
 
   return (
@@ -79,12 +92,15 @@ export default function SignInSide() {
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
+
             <Box
               component="form"
               noValidate
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
+              {error && <Alert severity="error">{error.message}</Alert>}
+
               <TextField
                 margin="normal"
                 required
@@ -94,6 +110,8 @@ export default function SignInSide() {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
               <TextField
                 margin="normal"
@@ -104,6 +122,8 @@ export default function SignInSide() {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
@@ -114,8 +134,9 @@ export default function SignInSide() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                disabled={loading}
               >
-                Sign In
+                {loading ? "Loading..." : "Sign In"}
               </Button>
               <Grid container>
                 <Grid item xs>
