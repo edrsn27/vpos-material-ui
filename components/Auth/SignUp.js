@@ -14,7 +14,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { useAuth } from "../../context/AuthProvider";
-import Alert from "@mui/material/Alert";
+import Alert from "@mui/material";
 import { useRouter } from "next/router";
 function Copyright(props) {
   return (
@@ -38,22 +38,21 @@ const theme = createTheme();
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-  const { forgotpassword } = useAuth();
+  const [loading, setLoading] = useState(false);
 
+  const { signup } = useAuth();
   const { push } = useRouter();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setLoading(true);
     setError("");
-    setSuccess("");
+
     try {
-      await forgotpassword(email);
-      setSuccess("Email sent");
+      await signup(email, password);
     } catch (error) {
-      console.log(error);
       setError(error);
     }
     setLoading(false);
@@ -75,7 +74,7 @@ export default function SignIn() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Forgot Password
+            Sign in
           </Typography>
           <Box
             component="form"
@@ -84,7 +83,6 @@ export default function SignIn() {
             sx={{ mt: 1 }}
           >
             {error && <Alert severity="error">{error.message}</Alert>}
-            {success && <Alert severity="success">{success}</Alert>}
             <TextField
               margin="normal"
               required
@@ -95,9 +93,20 @@ export default function SignIn() {
               autoComplete="email"
               autoFocus
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(event) => setEmail(event.target.value)}
             />
-
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Password"
+              type="password"
+              id="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -109,25 +118,25 @@ export default function SignIn() {
               sx={{ mt: 3, mb: 2 }}
               disabled={loading}
             >
-              {loading ? "Sending..." : "Send Password Reset Link"}
+              {loading ? "Loading..." : "Sign Up"}
             </Button>
             <Grid container>
               <Grid item xs>
                 <Link
                   href="#"
                   variant="body2"
-                  onClick={() => push("/auth/sign-in")}
+                  onClick={() => push("/auth/forgot-password")}
                 >
-                  {"Already have an account?"}
+                  Forgot password?
                 </Link>
               </Grid>
               <Grid item>
                 <Link
                   href="#"
                   variant="body2"
-                  onClick={() => push("/auth/sign-up")}
+                  onClick={() => push("/auth/sign-in")}
                 >
-                  {"Don't have an account?"}
+                  {"Already have an account? Sign In"}
                 </Link>
               </Grid>
             </Grid>
