@@ -1,9 +1,5 @@
-import React from 'react'
-import Auth from '../layouts/Auth'
-export default function Index() {
-  return (
-    <div>index</div>
-  )
-}
+import React from "react";
 
-Index.layout = Auth;
+export default function Index() {
+  return <div>index</div>;
+}
