@@ -1,8 +1,12 @@
 import AuthProvider from "../context/AuthProvider";
 function MyApp({ Component, pageProps }) {
+  const Layout = Component.layout || (({ children }) => <>{children}</>);
+
   return (
     <AuthProvider>
-      <Component {...pageProps} />
+      <Layout>
+        <Component {...pageProps} />
+      </Layout>
     </AuthProvider>
   );
 }
